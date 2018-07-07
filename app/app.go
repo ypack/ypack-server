@@ -28,14 +28,17 @@ func (app *App) Initialize(config DatabaseConfig) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	// Create the package service
+	ds := service.PackageService{DB: app.database}
+
 	// Create router and add logging middleware
 	app.router = mux.NewRouter()
 	app.router.Use(logger.Logger)
 
 	v1group := app.router.PathPrefix("/v1").Subrouter()
-	v1group.HandleFunc("/packages", service.GetPackagesHandler).Methods("GET")
-	v1group.HandleFunc("/package", service.GetPackageHandler).Methods("GET")
-	v1group.HandleFunc("/package/latest", service.GetLatestPackageHandler).Methods("GET")
+	v1group.HandleFunc("/packages", ds.GetPackagesHandler).Methods("GET")
+	v1group.HandleFunc("/package", ds.GetPackageHandler).Methods("GET")
+	v1group.HandleFunc("/package/latest", ds.GetLatestPackageHandler).Methods("GET")
 }
 
 // Run starts the Rest API with the given config
