@@ -11,12 +11,14 @@ import (
 var exitWithError = -1
 
 func main() {
+	dbHost := flag.String("db-host", "localhost", "Host of the database")
+	dbPort := flag.Int("db-port", 3306, "Database port to connect")
 	dbName := flag.String("db-name", "ypack", "Name of the database to connect")
 	dbUser := flag.String("db-user", "", "User to connect to the database")
 	dbPass := flag.String("db-pass", "", "Password for the given user")
 
-	host := flag.String("host", "localhost", "Host to attach the server")
-	port := flag.Int("port", 8080, "Port to listen for requests")
+	serverHost := flag.String("host", "localhost", "Host to attach the server")
+	serverPort := flag.Int("port", 8080, "Port to listen for requests")
 
 	flag.Parse()
 
@@ -34,19 +36,18 @@ func main() {
 		User:         *dbUser,
 		Password:     *dbPass,
 		DatabaseName: *dbName,
+		Host:         *dbHost,
+		Port:         *dbPort,
 	}
-	application := app.App{
-		Router:   mux.NewRouter(),
-		Database: nil,
-	}
+	application := app.App{Router: mux.NewRouter()}
 	// Initialize the application. Connection to the database will occur here.
 	// Also, we initialize here the api routes
 	application.Initialize(dbConfig)
 
 	// Setup server config and run it
 	serverConfig := app.ServerConfig{
-		Address: *host,
-		Port:    *port,
+		Address: *serverHost,
+		Port:    *serverPort,
 	}
 	application.Run(serverConfig)
 }

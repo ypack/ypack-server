@@ -12,11 +12,21 @@ import (
 // App initialize and run the main application
 type App struct {
 	Router   *mux.Router
-	Database *sql.DB
+	database *sql.DB
 }
 
-// Initialize the application with routes and database
+// Initialize init the application with routes and database.
+// First it tries to connect to the database, and if an error occurs,
+// the program exits and show the error in stdout. When the database
+// connection is success, then we create a sub-router for the v1 routes.
 func (app *App) Initialize(config DatabaseConfig) {
+	// Create database connection
+	var err error
+	app.database, err = sql.Open("mysql", config.ToString())
+	if err != nil {
+		log.Fatal(err)
+	}
+	// Add logging middleware
 	app.Router.Use(logger.Logger)
 
 	v1group := app.Router.PathPrefix("/v1").Subrouter()
