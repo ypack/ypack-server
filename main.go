@@ -2,22 +2,26 @@ package main
 
 import (
 	"github.com/gorilla/mux"
-
-	"github.com/ypack/rest-api-server/logger"
-	"github.com/ypack/rest-api-server/service"
-
-	"log"
-	"net/http"
+	"github.com/ypack/rest-api-server/app"
 )
 
 func main() {
-	router := mux.NewRouter()
-	router.Use(logger.Logger)
+	// Create database config. This will be used to connect to the database
+	// with the given user, password and database name
+	dbConfig := app.DatabaseConfig{}
 
-	v1group := router.PathPrefix("/v1").Subrouter()
-	v1group.HandleFunc("/packages", service.GetPackagesHandler).Methods("GET")
-	v1group.HandleFunc("/package", service.GetPackageHandler).Methods("GET")
-	v1group.HandleFunc("/package/latest", service.GetLatestPackageHandler).Methods("GET")
+	application := app.App{
+		Router:   mux.NewRouter(),
+		Database: nil,
+	}
+	// Initialize the application. Connection to the database will occur here.
+	// Also, we initialize here the api routes
+	application.Initialize(dbConfig)
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	// Setup server config and run it
+	serverConfig := app.ServerConfig{
+		Address: "localhost",
+		Port:    8080,
+	}
+	application.Run(serverConfig)
 }
