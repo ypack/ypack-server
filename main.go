@@ -3,12 +3,14 @@ package main
 import (
 	"flag"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
 	"github.com/ypack/rest-api-server/app"
 	"os"
 )
 
-var exitWithError = -1
+var (
+	version       = "0.1.0"
+	exitWithError = -1
+)
 
 func main() {
 	dbHost := flag.String("db-host", "localhost", "Host of the database")
@@ -39,7 +41,7 @@ func main() {
 		Host:         *dbHost,
 		Port:         *dbPort,
 	}
-	application := app.App{Router: mux.NewRouter()}
+	application := app.App{Version: version}
 	// Initialize the application. Connection to the database will occur here.
 	// Also, we initialize here the api routes
 	application.Initialize(dbConfig)
