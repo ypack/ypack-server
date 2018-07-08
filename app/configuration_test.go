@@ -11,7 +11,7 @@ func TestServerConfig_ToString(t *testing.T) {
 }
 
 func TestDatabaseConfig_ToString(t *testing.T) {
-	expected := "jdbc:mariadb://localhost:3306/DB?user=root&password=myPassword"
+	expected := "root:myPassword@tcp(localhost:3306)/DB"
 	config := DatabaseConfig{"root", "myPassword", "DB", "localhost", 3306}
 	if expected != config.ToString() {
 		t.Error("Expected", expected, "but got", config.ToString())

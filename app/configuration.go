@@ -14,8 +14,8 @@ type DatabaseConfig struct {
 // ToString transforms the DatabaseConfig struct to a readable format by the application.
 // It creates the url needed by the database driver.
 func (dc *DatabaseConfig) ToString() string {
-	return fmt.Sprintf("jdbc:mariadb://%s:%d/%s?user=%s&password=%s",
-		dc.Host, dc.Port, dc.DatabaseName, dc.User, dc.Password)
+	return fmt.Sprintf("%s:%s@tcp(%s:%d)/%s",
+		dc.User, dc.Password, dc.Host, dc.Port, dc.DatabaseName)
 }
 
 // ServerConfig to start the rest server
