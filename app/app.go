@@ -46,6 +46,10 @@ func (app *App) Initialize(config DatabaseConfig) {
 
 // Run starts the Rest API with the given config
 func (app *App) Run(config ServerConfig) {
+	err := app.database.DB().Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
 	log.Printf("Server version %s running on %s\n", app.Version, config.ToString())
 	log.Fatal(http.ListenAndServe(config.ToString(), app.router))
 }

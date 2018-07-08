@@ -11,6 +11,9 @@ func (p *Package) GetPackages(db *gorm.DB) []Package {
 	os := p.Versions[0].OS
 	log.Printf("Prepared to retrieve from database packages from %s", os)
 
+	var packages []Package
+	db.Find(&packages)
+
 	return []Package{}
 }
 

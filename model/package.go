@@ -6,7 +6,7 @@ type Package struct {
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Website     string    `json:"website"`
-	Alias       []string  `json:"alias"`
+	Alias       []Alias   `json:"alias"`
 	Authors     []Author  `json:"authors"`
 	Versions    []Version `json:"versions"`
 }
@@ -26,4 +26,9 @@ type Version struct {
 	Checksum string `json:"checksum"`
 	OS       string `json:"os"`
 	Arch     string `json:"arch"`
+}
+
+type Alias struct {
+	ID   uint
+	Name string `json:"name"`
 }
