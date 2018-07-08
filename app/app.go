@@ -1,8 +1,8 @@
 package app
 
 import (
-	"database/sql"
 	"github.com/gorilla/mux"
+	"github.com/jinzhu/gorm"
 	"github.com/ypack/rest-api-server/logger"
 	"github.com/ypack/rest-api-server/service"
 	"log"
@@ -12,7 +12,7 @@ import (
 // App initialize and run the main application
 type App struct {
 	router   *mux.Router
-	database *sql.DB
+	database *gorm.DB
 
 	// Version is the current application version
 	Version string
@@ -24,7 +24,7 @@ type App struct {
 // connection is success, then we create a sub-router for the v1 routes.
 func (app *App) Initialize(config DatabaseConfig) {
 	var err error
-	app.database, err = sql.Open("mysql", config.ToString())
+	app.database, err = gorm.Open("mysql", config.ToString())
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,10 +43,6 @@ func (app *App) Initialize(config DatabaseConfig) {
 
 // Run starts the Rest API with the given config
 func (app *App) Run(config ServerConfig) {
-	err := app.database.Ping()
-	if err != nil {
-		log.Fatal(err)
-	}
 	log.Printf("Server version %s running on %s\n", app.Version, config.ToString())
 	log.Fatal(http.ListenAndServe(config.ToString(), app.router))
 }

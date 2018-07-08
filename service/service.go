@@ -1,8 +1,8 @@
 package service
 
 import (
-	"database/sql"
 	"encoding/json"
+	"github.com/jinzhu/gorm"
 	"github.com/ypack/rest-api-server/model"
 	"github.com/ypack/rest-api-server/validate"
 	"log"
@@ -12,7 +12,7 @@ import (
 // PackageService is the service to retrieve package info
 type PackageService struct {
 	// DB is the database access layer
-	DB *sql.DB
+	DB *gorm.DB
 }
 
 // GetPackagesHandler retrieve a list of packages by operating system
