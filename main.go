@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/ypack/rest-api-server/app"
 	"os"
 )

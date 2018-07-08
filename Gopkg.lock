@@ -20,6 +20,12 @@
   version = "v1.6.2"
 
 [[projects]]
+  name = "github.com/jinzhu/gorm"
+  packages = ["dialects/mysql"]
+  revision = "6ed508ec6a4ecb3531899a69cbc746ccf65a4166"
+  version = "v1.9.1"
+
+[[projects]]
   name = "google.golang.org/appengine"
   packages = ["cloudsql"]
   revision = "b1f26356af11148e710935ed1ac8a7f5702c7612"
@@ -28,6 +34,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c67196bd88ba445dccb64bf10cc7783be6c79273ae01a915ae81b1074543f6d6"
+  inputs-digest = "a50dbd0522bf0f906c6754830787eacfeabc8828eadb069795a19e592597817a"
   solver-name = "gps-cdcl"
   solver-version = 1
