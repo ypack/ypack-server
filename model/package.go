@@ -4,8 +4,8 @@ package model
 type Package struct {
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
-	Alias       []string  `json:"alias"`
 	Website     string    `json:"website"`
+	Alias       []string  `json:"alias"`
 	Authors     []Author  `json:"authors"`
 	Versions    []Version `json:"versions"`
 }
@@ -22,4 +22,5 @@ type Version struct {
 	Url      string `json:"url"`
 	Checksum string `json:"checksum"`
 	OS       string `json:"os"`
+	Arch     string `json:"arch"`
 }
