@@ -2,6 +2,7 @@ package service
 
 import (
 	"database/sql"
+	"encoding/json"
 	"github.com/ypack/rest-api-server/model"
 	"github.com/ypack/rest-api-server/validate"
 	"log"
@@ -19,14 +20,25 @@ func (ps *PackageService) GetPackagesHandler(w http.ResponseWriter, r *http.Requ
 	os := r.URL.Query().Get("os")
 	if err := validate.IsValidOperatingSystem(os); err != nil {
 		// return error OS not supported
-		log.Println(err)
+		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
 		return
 	}
 	version := model.Version{OS: os}
 	pkg := model.Package{Versions: []model.Version{version}}
 
-	// TODO: return packages sorted alphabetically
-	pkg.GetPackages(ps.DB)
+	packages := pkg.GetPackages(ps.DB)
+	if packages == nil {
+		// return error 404
+		http.Error(w, "No packages found", http.StatusNotFound)
+		return
+	}
+	content, err := json.Marshal(packages)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(content)
 }
 
 // GetPackageHandler retrieve a package by the given filter
