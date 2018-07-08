@@ -29,7 +29,7 @@ func (p *Package) GetPackages(db *sql.DB) []Package {
 	var packages []Package
 	for rows.Next() {
 		var pkg Package
-		// FIXME: expected 11 params
+		// FIXME: expected 11 params, see rows.Columns()
 		err = rows.Scan(&pkg.Name, &pkg.Description, &pkg.Website)
 		if err != nil {
 			log.Println(err)
