@@ -28,6 +28,9 @@ func (app *App) Initialize(config DatabaseConfig) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	// Disable table name pluralization that uses gorm
+	app.database.SingularTable(true)
+
 	// Create the package service
 	ds := service.PackageService{DB: app.database}
 
