@@ -3,6 +3,8 @@ package service
 import (
 	"database/sql"
 	"github.com/ypack/rest-api-server/model"
+	"github.com/ypack/rest-api-server/validate"
+	"log"
 	"net/http"
 )
 
@@ -15,8 +17,14 @@ type PackageService struct {
 // GetPackagesHandler retrieve a list of packages by operating system
 func (ps *PackageService) GetPackagesHandler(w http.ResponseWriter, r *http.Request) {
 	os := r.URL.Query().Get("os")
+	if err := validate.IsValidOperatingSystem(os); err != nil {
+		// return error OS not supported
+		log.Println(err)
+		return
+	}
 	version := model.Version{OS: os}
 	pkg := model.Package{Versions: []model.Version{version}}
+
 	// TODO: return packages sorted alphabetically
 	pkg.GetPackages(ps.DB)
 }
