@@ -31,12 +31,36 @@ func (ps *PackageService) GetPackagesHandler(w http.ResponseWriter, r *http.Requ
 
 // GetPackageHandler retrieve a package by the given filter
 func (ps *PackageService) GetPackageHandler(w http.ResponseWriter, r *http.Request) {
-	//params := r.URL.Query()
-	//name, os := params.Get("name"), params.Get("os")
+	params := r.URL.Query()
+	name, os := params.Get("name"), params.Get("os")
+	if err := validate.IsValidOperatingSystem(os); err != nil {
+		// return error OS not supported
+		log.Println(err)
+		return
+	}
+	version := model.Version{OS: os}
+	pkg := model.Package{
+		Name:     name,
+		Versions: []model.Version{version},
+	}
+	// TODO: return package if found or error if not
+	pkg.GetPackageByName(ps.DB)
 }
 
 // GetLatestPackageHandler retrieve the latest version for the given package
 func (ps *PackageService) GetLatestPackageHandler(w http.ResponseWriter, r *http.Request) {
-	//params := r.URL.Query()
-	//name, os := params.Get("name"), params.Get("os")
+	params := r.URL.Query()
+	name, os := params.Get("name"), params.Get("os")
+	if err := validate.IsValidOperatingSystem(os); err != nil {
+		// return error OS not supported
+		log.Println(err)
+		return
+	}
+	version := model.Version{OS: os}
+	pkg := model.Package{
+		Name:     name,
+		Versions: []model.Version{version},
+	}
+	// TODO: return latest version of the package
+	pkg.GetLatestPackageByName(ps.DB)
 }
