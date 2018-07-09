@@ -2,25 +2,35 @@ package model
 
 // Package to be installed into a system
 type Package struct {
+	ID          uint      `json:"id"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Website     string    `json:"website"`
-	Alias       []string  `json:"alias"`
-	Authors     []Author  `json:"authors"`
+	Alias       []Alias   `json:"alias"`
+	Authors     []Author  `json:"authors" gorm:"many2many:package_author;"`
 	Versions    []Version `json:"versions"`
 }
 
 // Author of a Package
 type Author struct {
+	ID      uint   `json:"id"`
 	Name    string `json:"name"`
 	Contact string `json:"contact"`
 }
 
 // Version of a Package
 type Version struct {
-	Name     string `json:"name"`
-	Url      string `json:"url"`
-	Checksum string `json:"checksum"`
-	OS       string `json:"os"`
-	Arch     string `json:"arch"`
+	ID        uint   `json:"id"`
+	Name      string `json:"name"`
+	Url       string `json:"url"`
+	Checksum  string `json:"checksum"`
+	OS        string `json:"os"`
+	Arch      string `json:"arch"`
+	PackageID uint   `json:"package_id"`
+}
+
+type Alias struct {
+	ID        uint   `json:"id"`
+	Name      string `json:"name"`
+	PackageID uint   `json:"package_id"`
 }

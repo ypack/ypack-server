@@ -1,44 +1,34 @@
 package model
 
 import (
-	"database/sql"
+	"github.com/jinzhu/gorm"
 	"log"
 )
 
 // GetPackages retrieve from the database a list of packages from the
 // given operating system
-func (p *Package) GetPackages(db *sql.DB) []Package {
+func (p *Package) GetPackages(db *gorm.DB) []Package {
 	os := p.Versions[0].OS
-	log.Printf("Prepared to retrieve from database packages from %s", os)
-
-	stmt, err := db.Prepare(queryGetPackagesByOS)
-	if err != nil {
-		log.Println(err)
-		return nil
-	}
-	defer stmt.Close()
-
-	rows, err := stmt.Query(os)
-	if err != nil {
-		log.Println(err)
-		return nil
-	}
-	defer rows.Close()
-
-	// Transform data to the know model Package
 	var packages []Package
-	for rows.Next() {
-		var pkg Package
-		// FIXME: expected 11 params, see rows.Columns()
-		err = rows.Scan(&pkg.Name, &pkg.Description, &pkg.Website)
-		if err != nil {
-			log.Println(err)
-			break
-		}
-		packages = append(packages, pkg)
+
+	// search all packages that matches the given OS
+	if err := db.Joins("JOIN version on version.os = ?", os).Find(&packages).Error; err != nil {
+		log.Println(err)
+		return nil
 	}
-	err = rows.Err()
-	if err != nil {
+	// check if found results
+	if len(packages) == 0 {
+		return []Package{}
+	}
+	// Get results for each package
+	for i := 0; i < len(packages); i++ {
+		pkg := &packages[i]
+		db.Model(&pkg).Association("Versions").Find(&pkg.Versions)
+		db.Model(&pkg).Association("Alias").Find(&pkg.Alias)
+		db.Model(&pkg).Association("Authors").Find(&pkg.Authors)
+	}
+	// Check for errors
+	if err := db.Error; err != nil {
 		log.Println(err)
 		return nil
 	}
@@ -47,14 +37,14 @@ func (p *Package) GetPackages(db *sql.DB) []Package {
 
 // GetPackageByName retrieve from the database the given package with all versions of the
 // given operating system
-func (p *Package) GetPackageByName(db *sql.DB) Package {
+func (p *Package) GetPackageByName(db *gorm.DB) Package {
 	log.Printf("Prepared to retrieve from database package %s for %s", p.Name, p.Versions[0].OS)
 	return Package{}
 }
 
 // GetLatestPackageByName retrieve from the database the latest version of the given package
 // for the given operating system
-func (p *Package) GetLatestPackageByName(db *sql.DB) Package {
+func (p *Package) GetLatestPackageByName(db *gorm.DB) Package {
 	log.Printf("Prepared to retrieve from database the latest version of the package %s for %s",
 		p.Name, p.Versions[0].OS)
 	return Package{}
