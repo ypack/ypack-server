@@ -9,13 +9,30 @@ import (
 // given operating system
 func (p *Package) GetPackages(db *gorm.DB) []Package {
 	os := p.Versions[0].OS
-	log.Printf("Prepared to retrieve from database packages from %s", os)
-
 	var packages []Package
-	db.Find(&packages)
-	log.Println(packages)
 
-	return []Package{}
+	// search all packages that matches the given OS
+	if err := db.Joins("JOIN version on version.os = ?", os).Find(&packages).Error; err != nil {
+		log.Println(err)
+		return nil
+	}
+	// check if found results
+	if len(packages) == 0 {
+		return []Package{}
+	}
+	// Get results for each package
+	for i := 0; i < len(packages); i++ {
+		pkg := &packages[i]
+		db.Model(&pkg).Association("Versions").Find(&pkg.Versions)
+		db.Model(&pkg).Association("Alias").Find(&pkg.Alias)
+		db.Model(&pkg).Association("Authors").Find(&pkg.Authors)
+	}
+	// Check for errors
+	if err := db.Error; err != nil {
+		log.Println(err)
+		return nil
+	}
+	return packages
 }
 
 // GetPackageByName retrieve from the database the given package with all versions of the
