@@ -12,7 +12,8 @@ func (p *Package) GetPackages(db *gorm.DB) []Package {
 	var packages []Package
 
 	// search all packages that matches the given OS
-	if err := db.Joins("JOIN version on version.os = ?", os).Find(&packages).Error; err != nil {
+	if err := db.Joins("JOIN version on version.os = ? AND version.package_id = package.id", os).
+		Find(&packages).Error; err != nil {
 		log.Println(err)
 		return nil
 	}
@@ -23,8 +24,8 @@ func (p *Package) GetPackages(db *gorm.DB) []Package {
 	// Get results for each package
 	for i := 0; i < len(packages); i++ {
 		pkg := &packages[i]
-		db.Model(&pkg).Association("Versions").Find(&pkg.Versions)
-		db.Model(&pkg).Association("Alias").Find(&pkg.Alias)
+		db.Model(&pkg).Where(&Version{OS: os}).Association("Versions").Find(&pkg.Versions)
+		db.Model(&pkg).Where(&Alias{PackageID: pkg.ID}).Association("Alias").Find(&pkg.Alias)
 		db.Model(&pkg).Association("Authors").Find(&pkg.Authors)
 	}
 	// Check for errors
