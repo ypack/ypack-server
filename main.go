@@ -51,7 +51,7 @@ func main() {
 		Host:         *dbHost,
 		Port:         *dbPort,
 	}
-	application := app.App{Version: version}
+	application := app.App{Version: version, Debug: true}
 	// Initialize the application. Connection to the database will occur here.
 	// Also, we initialize here the api routes
 	application.Initialize(dbConfig)

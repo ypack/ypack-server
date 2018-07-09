@@ -16,6 +16,8 @@ type App struct {
 
 	// Version is the current application version
 	Version string
+	// Debug flag to show queries
+	Debug bool
 }
 
 // Initialize init the application with routes and database.
@@ -30,6 +32,9 @@ func (app *App) Initialize(config DatabaseConfig) {
 	}
 	// Disable table name pluralization that uses gorm
 	app.database.SingularTable(true)
+	if app.Debug {
+		app.database.LogMode(true)
+	}
 
 	// Create the package service
 	ds := service.PackageService{DB: app.database}

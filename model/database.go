@@ -13,6 +13,7 @@ func (p *Package) GetPackages(db *gorm.DB) []Package {
 
 	var packages []Package
 	db.Find(&packages)
+	log.Println(packages)
 
 	return []Package{}
 }

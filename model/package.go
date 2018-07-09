@@ -2,13 +2,13 @@ package model
 
 // Package to be installed into a system
 type Package struct {
-	ID          uint    `json:"id"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Website     string  `json:"website"`
-	Alias       []Alias `json:"alias"`
-	//Authors     []Author  `json:"authors"`
-	Versions []Version `json:"versions"`
+	ID          uint      `json:"id"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Website     string    `json:"website"`
+	Alias       []Alias   `json:"alias"`
+	Authors     []Author  `json:"authors"`
+	Versions    []Version `json:"versions"`
 }
 
 // Author of a Package
