@@ -28,6 +28,11 @@ func (ps *PackageService) GetPackagesHandler(w http.ResponseWriter, r *http.Requ
 
 	packages := pkg.GetPackages(ps.DB)
 	if packages == nil {
+		// return internal server error
+		http.Error(w, "Unexpected error when retrieving packages", http.StatusInternalServerError)
+		return
+	}
+	if len(packages) == 0 {
 		// return error 404
 		http.Error(w, "No packages found", http.StatusNotFound)
 		return

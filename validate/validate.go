@@ -18,5 +18,5 @@ func IsValidOperatingSystem(os string) error {
 			return nil
 		}
 	}
-	return fmt.Errorf("%s operating system not supported", os)
+	return fmt.Errorf("operating system not supported")
 }
