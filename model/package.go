@@ -6,7 +6,7 @@ type Package struct {
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Website     string    `json:"website"`
-	Alias       []Alias   `json:"alias"`
+	Alias       []Alias   `json:"alias,omitempty"`
 	Authors     []Author  `json:"authors" gorm:"many2many:package_author;"`
 	Versions    []Version `json:"versions"`
 }
@@ -23,14 +23,14 @@ type Version struct {
 	ID        uint   `json:"id"`
 	Name      string `json:"name"`
 	Url       string `json:"url"`
-	Checksum  string `json:"checksum"`
+	Checksum  string `json:"checksum,omitempty"`
 	OS        string `json:"os"`
 	Arch      string `json:"arch"`
-	PackageID uint   `json:"package_id"`
+	PackageID uint   `json:"-"`
 }
 
 type Alias struct {
 	ID        uint   `json:"id"`
 	Name      string `json:"name"`
-	PackageID uint   `json:"package_id"`
+	PackageID uint   `json:"-"`
 }
