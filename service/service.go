@@ -52,7 +52,12 @@ func (ps *PackageService) GetPackageHandler(w http.ResponseWriter, r *http.Reque
 	name, os := params.Get("name"), params.Get("os")
 	if err := validate.IsValidOperatingSystem(os); err != nil {
 		// return error OS not supported
-		log.Println(err)
+		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
+		return
+	}
+	if err := validate.IsValidPackageName(name); err != nil {
+		// return error, invalid package name
+		http.Error(w, err.Error(), http.StatusUnprocessableEntity)
 		return
 	}
 	version := model.Version{OS: os}
