@@ -32,6 +32,7 @@ Before execute, you can change some parameters:
 | `db-pass` 	| Database user password 	|               	|
 | `host`    	| Server host            	| `localhost`   	|
 | `port`    	| Server listen port     	| `8080`        	|
+| `debug`    	| Show debug logs when needed     	| `false`        	|
 
 
 ## Start

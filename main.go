@@ -23,6 +23,7 @@ const (
 )
 
 func main() {
+	debug := flag.Bool("debug", false, "When enabled, shown debug logs")
 	dbHost := flag.String("db-host", "localhost", "Host of the database")
 	dbPort := flag.Int("db-port", 3306, "Database port to connect")
 	dbName := flag.String("db-name", "ypack", "Name of the database to connect")
@@ -51,7 +52,7 @@ func main() {
 		Host:         *dbHost,
 		Port:         *dbPort,
 	}
-	application := app.App{Version: version, Debug: true}
+	application := app.App{Version: version, Debug: *debug}
 	// Initialize the application. Connection to the database will occur here.
 	// Also, we initialize here the api routes
 	application.Initialize(dbConfig)
