@@ -65,8 +65,20 @@ func (ps *PackageService) GetPackageHandler(w http.ResponseWriter, r *http.Reque
 		Name:     name,
 		Versions: []model.Version{version},
 	}
-	// TODO: return package if found or error if not
-	pkg.GetPackageByName(ps.DB)
+	pkgInfo, err := pkg.GetPackageByName(ps.DB)
+	if err != nil {
+		// package not found
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	content, err := json.Marshal(pkgInfo)
+	if err != nil {
+		// error marshalling package to json
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(content)
 }
 
 // GetLatestPackageHandler retrieve the latest version for the given package
