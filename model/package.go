@@ -2,7 +2,7 @@ package model
 
 // Package to be installed into a system
 type Package struct {
-	ID          uint      `json:"id"`
+	ID          uint      `json:"-"`
 	Name        string    `json:"name"`
 	Description string    `json:"description"`
 	Website     string    `json:"website"`
@@ -13,14 +13,14 @@ type Package struct {
 
 // Author of a Package
 type Author struct {
-	ID      uint   `json:"id"`
+	ID      uint   `json:"-"`
 	Name    string `json:"name"`
 	Contact string `json:"contact"`
 }
 
 // Version of a Package
 type Version struct {
-	ID        uint   `json:"id"`
+	ID        uint   `json:"-"`
 	Name      string `json:"name"`
 	Url       string `json:"url"`
 	Checksum  string `json:"checksum,omitempty"`
@@ -30,7 +30,7 @@ type Version struct {
 }
 
 type Alias struct {
-	ID        uint   `json:"id"`
+	ID        uint   `json:"-"`
 	Name      string `json:"name"`
 	PackageID uint   `json:"-"`
 }
