@@ -58,3 +58,13 @@ func (app *App) Run(config ServerConfig) {
 	log.Printf("Server version %s running on %s\n", app.Version, config.ToString())
 	log.Fatal(http.ListenAndServe(config.ToString(), app.router))
 }
+
+// Shutdown closes the database connection
+func (app *App) Shutdown() {
+	log.Println("Releasing server resources...")
+	err := app.database.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Server connection closed")
+}

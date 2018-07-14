@@ -7,6 +7,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/ypack/rest-api-server/app"
 	"os"
+	"os/signal"
 )
 
 const (
@@ -63,5 +64,11 @@ func main() {
 		Port:    *serverPort,
 	}
 	fmt.Println(banner)
-	application.Run(serverConfig)
+	go application.Run(serverConfig)
+
+	// handle exit signals to shutdown the server
+	channel := make(chan os.Signal, 1)
+	signal.Notify(channel, os.Interrupt)
+	<-channel
+	application.Shutdown()
 }
