@@ -54,17 +54,18 @@ func main() {
 		Port:         *dbPort,
 	}
 	application := app.App{Version: version, Debug: *debug}
-	// Initialize the application. Connection to the database will occur here.
-	// Also, we initialize here the api routes
-	application.Initialize(dbConfig)
 
 	// Setup server config and run it
 	serverConfig := app.ServerConfig{
 		Address: *serverHost,
 		Port:    *serverPort,
 	}
+	// Initialize the application. Connection to the database will occur here.
+	// Also, we initialize here the api routes
+	application.Initialize(dbConfig, serverConfig)
+
 	fmt.Println(banner)
-	go application.Run(serverConfig)
+	go application.Run()
 
 	// handle exit signals to shutdown the server
 	channel := make(chan os.Signal, 1)
