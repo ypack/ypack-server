@@ -1,13 +1,10 @@
 package model
 
 import (
-	"errors"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"log"
 )
-
-var errorPackageNotFound = errors.New("package %s not found")
 
 // GetPackages retrieve from the database a list of packages from the
 // given operating system
